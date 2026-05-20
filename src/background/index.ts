@@ -8,7 +8,7 @@ import {
   getPlatformInfos,
 } from "~sync/common";
 import QuantumEntanglementKeepAlive from "../utils/keep-alive";
-import { linkExtensionMessageHandler, starter } from "./services/api";
+import { linkExtensionMessageHandler } from "./services/api";
 import {
   addTabsManagerMessages,
   tabsManagerHandleTabRemoved,
@@ -35,7 +35,7 @@ async function initDefaultTrustedDomains() {
 
 chrome.runtime.onInstalled.addListener((object) => {
   if (object.reason === chrome.runtime.OnInstalledReason.INSTALL) {
-    chrome.tabs.create({ url: "https://multipost.app/on-install" });
+    chrome.runtime.openOptionsPage();
   }
   initDefaultTrustedDomains();
   chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: false });
@@ -141,7 +141,7 @@ const defaultMessageHandler = (request, _sender, sendResponse) => {
     }
   }
 };
-starter(1000 * 30);
+// Cloud ping removed — fully local mode
 // Message Handler || 消息处理器 || END
 
 // Keep Alive || 保活机制 || START

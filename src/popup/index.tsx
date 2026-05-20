@@ -13,8 +13,6 @@ export function getShadowContainer() {
 
 export const getShadowHostId = () => "test-shadow";
 
-const BASE_URL = "https://multipost.app";
-
 export const getStyle = () => {
   const style = document.createElement("style");
 
@@ -24,7 +22,7 @@ export const getStyle = () => {
 
 const IndexPopup = () => {
   useEffect(() => {
-    chrome.tabs.create({ url: `${BASE_URL}/dashboard/publish` });
+    chrome.runtime.openOptionsPage();
   }, []);
 
   return <div />;

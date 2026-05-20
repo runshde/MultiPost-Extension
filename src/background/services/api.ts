@@ -1,60 +1,9 @@
 import { Storage } from "@plasmohq/storage";
-import { getPlatformInfos } from "~sync/common";
 
-const storage = new Storage({ area: "local" });
-
-const host = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://multipost.app";
-
-export const ping = async (withPlatforms = false) => {
-  const apiKey = await storage.get("apiKey");
-  if (!apiKey) {
-    return;
-  }
-  const extensionClientId = (await storage.get("extensionClientId")) || "";
-  const body = {
-    extensionVersion: chrome.runtime.getManifest().version,
-    extensionClientId,
-    platformInfos: undefined,
-  };
-  if (withPlatforms) {
-    let platformInfos = await getPlatformInfos();
-    platformInfos = platformInfos.map((platform) => {
-      const platformCopy = { ...platform };
-      platformCopy.injectFunction = undefined;
-      if (platformCopy.accountInfo) {
-        platformCopy.accountInfo.extraData = undefined;
-      }
-      return platformCopy;
-    });
-    body.platformInfos = platformInfos;
-  }
-
-  const response = await fetch(`${host}/api/extension/ping`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify(body),
-  });
-  if (response.ok) {
-    const body = await response.json();
-    if (!body.success && body.error === "KEY_EXPIRED") {
-      await storage.remove("apiKey");
-    } else if (!body.success && body.error === "CLIENT_NOT_FOUND") {
-      await storage.remove("extensionClientId");
-    } else if (body.success && body.data.action === "NEW_TASK") {
-      chrome.tabs.create({ url: body.data.url });
-    } else if (body.success && body.data.action === "NEW_CLIENT") {
-      await storage.set("extensionClientId", body.data.clientId);
-    }
-  }
-  return null;
-};
+const _storage = new Storage({ area: "local" });
 
 export const linkExtensionMessageHandler = async (request, _sender, sendResponse) => {
   if (request.action === "MULTIPOST_EXTENSION_LINK_EXTENSION") {
-    console.log("request", request);
     const params = {
       action: "MULTIPOST_EXTENSION_LINK_EXTENSION",
       apiKey: request.data.apiKey,
@@ -62,7 +11,6 @@ export const linkExtensionMessageHandler = async (request, _sender, sendResponse
 
     const encodedParams = btoa(JSON.stringify(params));
 
-    // 打开信任域名确认窗口
     chrome.windows.create({
       url: chrome.runtime.getURL(`tabs/link-extension.html#${encodedParams}`),
       type: "popup",
@@ -80,9 +28,4 @@ export const linkExtensionMessageHandler = async (request, _sender, sendResponse
     };
     chrome.runtime.onMessage.addListener(linkExtensionListener);
   }
-};
-
-export const starter = (interval: number) => {
-  ping(true);
-  setInterval(ping, interval);
 };

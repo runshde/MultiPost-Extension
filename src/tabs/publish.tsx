@@ -724,20 +724,6 @@ export default function Publish() {
             </div>
           )}
         </div>
-
-        {/* Contact us footer tip */}
-        <div className="mt-8 text-center">
-          <p className="text-xs text-gray-500">
-            {chrome.i18n.getMessage("contactUsIfProblem")}
-            <a
-              href="https://docs.multipost.app/docs/user-guide/contact-us"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-500 underline hover:text-blue-600">
-              Contact Us
-            </a>
-          </p>
-        </div>
       </div>
     </HeroUIProvider>
   );
