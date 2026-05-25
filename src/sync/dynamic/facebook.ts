@@ -33,7 +33,7 @@ export async function DynamicFacebook(data: SyncData) {
   }
 
   try {
-    const { title, content, images, videos } = data.data as DynamicData;
+    const { title, content, images, videos, tags } = data.data as DynamicData;
 
     // 等待页面加载完成
     await waitForElement("body");
@@ -105,7 +105,8 @@ export async function DynamicFacebook(data: SyncData) {
       cancelable: true,
       clipboardData: new DataTransfer(),
     });
-    const textContent = title ? `${title}\n${content}` : content || "";
+    const tagSuffix = tags?.length ? ` ${tags.map((t) => `#${t}`).join(" ")}` : "";
+    const textContent = `${title ? `${title}\n` : ""}${content || ""}${tagSuffix}`;
     pasteEvent.clipboardData?.setData("text/plain", textContent);
     editor.dispatchEvent(pasteEvent);
 
@@ -113,7 +114,7 @@ export async function DynamicFacebook(data: SyncData) {
     const mediaFiles = [...(images || []), ...(videos || [])];
     if (mediaFiles.length > 0) {
       const fileInputs = document.querySelectorAll(
-        'input[type="file"][accept="image/*,image/heif,image/heic,video/*,video/mp4,video/x-m4v,video/x-matroska,.mkv"]',
+        'input[type="file"][accept^="image/*,image/heif,image/heic,video/*,video/mp4,video/x-m4v,video/x-matroska,.mkv"]',
       );
       console.debug("fileInputs", fileInputs);
 

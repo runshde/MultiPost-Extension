@@ -32,7 +32,7 @@ export async function DynamicInstagram(data: SyncData) {
   }
 
   try {
-    const { title, content, images, videos } = data.data as DynamicData;
+    const { title, content, images, videos, tags } = data.data as DynamicData;
 
     // 等待页面加载完成
     await waitForElement("body");
@@ -136,15 +136,16 @@ export async function DynamicInstagram(data: SyncData) {
     const captionEditors = document.querySelectorAll(
       'div[contenteditable="true"][role="textbox"][spellcheck="true"][tabindex="0"][data-lexical-editor="true"]',
     );
-    const captionEditor = Array.from(captionEditors).find((el) => {
+    const captionEditor = (Array.from(captionEditors).find((el) => {
       const placeholder = el.getAttribute("aria-placeholder");
       console.debug("ariaPlaceholder", placeholder);
       return (
+        placeholder?.includes("输入配文") ||
         placeholder?.includes("输入说明文字") ||
         placeholder?.includes("撰寫說明文字") ||
         placeholder?.includes("Write a caption")
       );
-    }) as HTMLElement;
+    }) ?? captionEditors[captionEditors.length - 1]) as HTMLElement;
 
     console.debug("captionEditor", captionEditor);
     if (!captionEditor) {
@@ -158,7 +159,8 @@ export async function DynamicInstagram(data: SyncData) {
       cancelable: true,
       clipboardData: new DataTransfer(),
     });
-    const captionContent = title ? `${title}\n${content}` : content || "";
+    const tagSuffix = tags?.length ? ` ${tags.map((t) => `#${t}`).join(" ")}` : "";
+    const captionContent = `${title ? `${title}\n` : ""}${content || ""}${tagSuffix}`;
     pasteEvent.clipboardData?.setData("text/plain", captionContent);
     captionEditor.dispatchEvent(pasteEvent);
 
@@ -173,12 +175,11 @@ export async function DynamicInstagram(data: SyncData) {
       document.querySelector('div[aria-label="Create new post"][role="dialog"]');
 
     console.debug("createPostDialog", createPostDialog);
-    if (!createPostDialog) {
-      console.debug("未找到创建新帖子对话框");
-      return;
-    }
 
-    buttons = createPostDialog.querySelectorAll('div[role="button"][tabindex="0"]');
+    // 分享按钮的 class 全是混淆值,只能靠文字定位;对话框 aria-label 也会随版本变,
+    // 找不到对话框时回退到整个 document 范围查找。
+    const shareScope: ParentNode = createPostDialog ?? document;
+    buttons = shareScope.querySelectorAll('div[role="button"][tabindex="0"]');
     const shareButton = Array.from(buttons).find(
       (el) => el.textContent?.includes("分享") || el.textContent?.includes("Share"),
     ) as HTMLElement;
