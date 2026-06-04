@@ -528,6 +528,10 @@
     "message": "Reddit",
     "description": "Reddit 平台名称"
   },
+  "platformPinterest": {
+    "message": "Pinterest",
+    "description": "Pinterest 平台名称"
+  },
   "platformWeiXinVideo": {
     "message": "微信视频号",
     "description": "微信视频号平台名称"
@@ -663,6 +667,14 @@
     "message": "搜狐号",
     "description": "搜狐号平台名称"
   },
+  "platformAliyun": {
+    "message": "阿里云",
+    "description": "阿里云平台名称"
+  },
+  "platformTencentyun": {
+    "message": "腾讯云",
+    "description": "腾讯云平台名称"
+  },
   "platformNetease": {
     "message": "网易号",
     "description": "网易号平台名称"
@@ -678,6 +690,12 @@
   "platformYidian": {
     "message": "一点号",
     "description": "一点号平台名称"
+  },
+  "platformDingduanhao": {
+    "message": "顶端号"
+  },
+  "platformKuaichuanhao": {
+    "message": "快传号"
   },
   "platformPinduoduo": {
     "message": "拼多多",
@@ -972,6 +990,10 @@
   "platformLizhi": {
     "message": "荔枝"
   },
+  "platformSpotify": {
+    "message": "Spotify",
+    "description": "Spotify 平台名称"
+  },
   "refreshAccountsTitle": {
     "message": "刷新账号",
     "description": "刷新账号页面标题"
@@ -1095,6 +1117,15 @@
   "platformAutohome": {
     "message": "汽车之家",
     "description": "汽车之家 平台名称"
+  },
+  "platformJianpian": {
+    "message": "美篇"
+  },
+  "platformTonghuashun": {
+    "message": "同花顺"
+  },
+  "platformDongchedi": {
+    "message": "懂车号"
   },
   "platformIqiyi": {
     "message": "爱奇艺",

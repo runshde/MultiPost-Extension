@@ -521,6 +521,10 @@
     "message": "Reddit",
     "description": "Platform name for Reddit"
   },
+  "platformPinterest": {
+    "message": "Pinterest",
+    "description": "Platform name for Pinterest"
+  },
   "platformWeiXinVideo": {
     "message": "WeiXinVideo",
     "description": "Platform name for WeiXinVideo"
@@ -685,6 +689,14 @@
     "message": "Sohu",
     "description": "Platform name for Sohu"
   },
+  "platformAliyun": {
+    "message": "Aliyun",
+    "description": "Platform name for Aliyun"
+  },
+  "platformTencentyun": {
+    "message": "Tencent Cloud",
+    "description": "Platform name for Tencent Cloud"
+  },
   "platformNetease": {
     "message": "NetEase",
     "description": "Platform name for NetEase"
@@ -700,6 +712,12 @@
   "platformYidian": {
     "message": "Yidian",
     "description": "Platform name for Yidian"
+  },
+  "platformDingduanhao": {
+    "message": "Dingduanhao"
+  },
+  "platformKuaichuanhao": {
+    "message": "Kuaichuanhao"
   },
   "platformPinduoduo": {
     "message": "Pinduoduo",
@@ -998,6 +1016,10 @@
   "platformLizhi": {
     "message": "LiZhi"
   },
+  "platformSpotify": {
+    "message": "Spotify",
+    "description": "Spotify platform name"
+  },
   "refreshAccountsTitle": {
     "message": "Refresh Accounts",
     "description": "Refresh accounts page title"
@@ -1121,6 +1143,15 @@
   "platformAutohome": {
     "message": "Autohome",
     "description": "Autohome platform name"
+  },
+  "platformJianpian": {
+    "message": "Jianpian"
+  },
+  "platformTonghuashun": {
+    "message": "Tonghuashun"
+  },
+  "platformDongchedi": {
+    "message": "Dongchedi"
   },
   "platformIqiyi": {
     "message": "iQiyi",

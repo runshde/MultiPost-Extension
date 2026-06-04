@@ -1,26 +1,39 @@
 import { Article51CTO } from "./article/51cto";
+import { ArticleAliyun } from "./article/aliyun";
 import { ArticleAutohome } from "./article/autohome";
 import { ArticleBaijiahao } from "./article/baijiahao";
 import { ArticleBilibili } from "./article/bilibili";
 import { ArticleCSDN } from "./article/csdn";
+import { ArticleDingduanhao } from "./article/dingduanhao";
+import { ArticleDongchedi } from "./article/dongchedi";
 import { ArticleDouban } from "./article/douban";
 import { ArticleEastmoney } from "./article/eastmoney";
 import { ArticleInfoQ } from "./article/infoq";
+import { ArticleJianpian } from "./article/jianpian";
 import { ArticleJianshu } from "./article/jianshu";
 import { ArticleJuejin } from "./article/juejin";
+import { ArticleKuaichuanhao } from "./article/kuaichuanhao";
 import { ArticleMedium } from "./article/medium";
+import { ArticleNetease } from "./article/netease";
 import { ArticleOSChina } from "./article/oschina";
+import { ArticleQQ } from "./article/qq";
 import { ArticleSegmentfault } from "./article/segmentfault";
 import { ArticleSMZDM } from "./article/smzdm";
+import { ArticleSohu } from "./article/sohu";
 import { ArticleSSPai } from "./article/sspai";
 import { ArticleSubstack } from "./article/substack";
+import { ArticleTencentyun } from "./article/tencentyun";
+import { ArticleTonghuashun } from "./article/tonghuashun";
 import { ArticleToutiao } from "./article/toutiao";
 import { ArticleWeibo } from "./article/weibo";
 import { ArticleWeixin } from "./article/weixin";
 import { ArticleWordpress } from "./article/wordpress";
 import { ArticleWoshipm } from "./article/woshipm";
+import { ArticleXArticle } from "./article/xarticle";
 import { ArticleXueqiu } from "./article/xueqiu";
+import { ArticleYidianzixun } from "./article/yidianzixun";
 import { ArticleZhihu } from "./article/zhihu";
+import { ArticleZsxq } from "./article/zsxq";
 import type { PlatformInfo } from "./common";
 
 export const ArticleInfoMap: Record<string, PlatformInfo> = {
@@ -79,6 +92,30 @@ export const ArticleInfoMap: Record<string, PlatformInfo> = {
     tags: ["CN"],
     accountKey: "segmentfault",
   },
+  // experimental(待线上验证):基于 aibeike 1.6.5 的 Aliyun ARTICLE DOM 路径
+  ARTICLE_ALIYUN: {
+    type: "ARTICLE",
+    name: "ARTICLE_ALIYUN",
+    homeUrl: "https://developer.aliyun.com/",
+    faviconUrl: "https://img.alicdn.com/tfs/TB1_ZXuNcfpK1RjSZFOXXa6nFXa-32-32.ico",
+    platformName: chrome.i18n.getMessage("platformAliyun"),
+    injectUrl: "https://developer.aliyun.com/article/new",
+    injectFunction: ArticleAliyun,
+    tags: ["CN"],
+    accountKey: "aliyun",
+  },
+  // experimental(待线上验证):基于 aibeike 1.6.5 的 TencentYun ARTICLE DOM 路径
+  ARTICLE_TENCENTYUN: {
+    type: "ARTICLE",
+    name: "ARTICLE_TENCENTYUN",
+    homeUrl: "https://cloud.tencent.com/developer",
+    faviconUrl: "https://cloud.tencent.com/favicon.ico",
+    platformName: chrome.i18n.getMessage("platformTencentyun"),
+    injectUrl: "https://cloud.tencent.com/developer/article/write-new",
+    injectFunction: ArticleTencentyun,
+    tags: ["CN"],
+    accountKey: "tencentyun",
+  },
   ARTICLE_BAIJIAHAO: {
     type: "ARTICLE",
     name: "ARTICLE_BAIJIAHAO",
@@ -100,6 +137,18 @@ export const ArticleInfoMap: Record<string, PlatformInfo> = {
     injectFunction: ArticleToutiao,
     tags: ["CN"],
     accountKey: "toutiao",
+  },
+  // experimental(待线上验证):基于 aibeike 1.6.5 的 QQ ARTICLE DOM 路径
+  ARTICLE_QQ: {
+    type: "ARTICLE",
+    name: "ARTICLE_QQ",
+    homeUrl: "https://om.qq.com/",
+    faviconUrl: "https://om.qq.com/favicon.ico",
+    platformName: chrome.i18n.getMessage("platformQiE"),
+    injectUrl: "https://om.qq.com/main/creation/article",
+    injectFunction: ArticleQQ,
+    tags: ["CN"],
+    accountKey: "qie",
   },
   ARTICLE_DOUBAN: {
     type: "ARTICLE",
@@ -276,5 +325,125 @@ export const ArticleInfoMap: Record<string, PlatformInfo> = {
     injectFunction: ArticleAutohome,
     tags: ["CN"],
     accountKey: "autohome",
+  },
+  // experimental(待线上验证):基于 aibeike 1.6.5 的 Jianpian ARTICLE DOM 路径
+  ARTICLE_JIANPIAN: {
+    type: "ARTICLE",
+    name: "ARTICLE_JIANPIAN",
+    homeUrl: "https://www.jianpian.cn/",
+    faviconUrl: "https://ss2.meipian.me/editor-v3/webcdn/logo.ico",
+    platformName: chrome.i18n.getMessage("platformJianpian"),
+    injectUrl: "https://www.jianpian.cn/p/edit",
+    injectFunction: ArticleJianpian,
+    tags: ["CN"],
+    accountKey: "jianpian",
+  },
+  // experimental(待线上验证):基于 aibeike 1.6.5 的 Tonghuashun ARTICLE DOM 路径
+  ARTICLE_TONGHUASHUN: {
+    type: "ARTICLE",
+    name: "ARTICLE_TONGHUASHUN",
+    homeUrl: "https://t.10jqka.com.cn/",
+    faviconUrl: "https://t.10jqka.com.cn/circle/images/favicon.ico",
+    platformName: chrome.i18n.getMessage("platformTonghuashun"),
+    injectUrl: "https://t.10jqka.com.cn/newcircle/creation/postAll",
+    injectFunction: ArticleTonghuashun,
+    tags: ["CN"],
+    accountKey: "tonghuashun",
+  },
+  // experimental(待线上验证):基于 aibeike 1.6.5 的 Dongchedi ARTICLE DOM 路径
+  ARTICLE_DONGCHEDI: {
+    type: "ARTICLE",
+    name: "ARTICLE_DONGCHEDI",
+    homeUrl: "https://mp.dcdapp.com/",
+    faviconUrl: "https://p3-dcd.byteimg.com/obj/tos-cn-i-dcdx/4e214394e186b0a95bc9ab7fc5154770",
+    platformName: chrome.i18n.getMessage("platformDongchedi"),
+    injectUrl: "https://mp.dcdapp.com/profile_v2/publish/article",
+    injectFunction: ArticleDongchedi,
+    tags: ["CN"],
+    accountKey: "dongchedi",
+  },
+  // experimental(待线上验证):基于 aibeike 1.6.5 的 Zsxq ARTICLE DOM 路径
+  ARTICLE_ZSXQ: {
+    type: "ARTICLE",
+    name: "ARTICLE_ZSXQ",
+    homeUrl: "https://wx.zsxq.com/",
+    faviconUrl: "https://wx.zsxq.com/assets_dweb/images/favicon_32.ico",
+    platformName: chrome.i18n.getMessage("platformZSXQ"),
+    injectUrl: "https://wx.zsxq.com/",
+    injectFunction: ArticleZsxq,
+    tags: ["CN"],
+    accountKey: "zsxq",
+  },
+  // experimental(待线上验证):基于 aibeike 1.6.5 的 163 DOM 路径,正文图片 CDN 重传需后续 API 化
+  ARTICLE_NETEASE: {
+    type: "ARTICLE",
+    name: "ARTICLE_NETEASE",
+    homeUrl: "https://mp.163.com/",
+    faviconUrl: "https://static.ws.126.net/163/f2e/news/yxybd_pc/resource/static/share-icon.png",
+    platformName: chrome.i18n.getMessage("platformNetease"),
+    injectUrl: "https://mp.163.com/#/article-publish",
+    injectFunction: ArticleNetease,
+    tags: ["CN"],
+    accountKey: "netease",
+  },
+  // experimental(待线上验证):基于 aibeike 1.6.5 的 Sohu ARTICLE DOM fallback 路径
+  ARTICLE_SOHU: {
+    type: "ARTICLE",
+    name: "ARTICLE_SOHU",
+    homeUrl: "https://mp.sohu.com/",
+    faviconUrl: "https://statics.itc.cn/mp-new/icon/1.1/favicon.ico",
+    platformName: chrome.i18n.getMessage("platformSohu"),
+    injectUrl: "https://mp.sohu.com/mpfe/v4/contentManagement/news/addarticle",
+    injectFunction: ArticleSohu,
+    tags: ["CN"],
+    accountKey: "sohu",
+  },
+  // experimental(待线上验证):基于 aibeike 1.6.5 的 Dingduanhao ARTICLE DOM 路径
+  ARTICLE_DINGDUANHAO: {
+    type: "ARTICLE",
+    name: "ARTICLE_DINGDUANHAO",
+    homeUrl: "https://mp.topnews.cn/",
+    faviconUrl: "https://mp.topnews.cn/favicon.ico",
+    platformName: chrome.i18n.getMessage("platformDingduanhao"),
+    injectUrl: "https://mp.topnews.cn/#/scriptWrite",
+    injectFunction: ArticleDingduanhao,
+    tags: ["CN"],
+    accountKey: "dingduanhao",
+  },
+  // experimental(待线上验证):基于 aibeike 1.6.5 的 Kuaichuanhao ARTICLE DOM 路径
+  ARTICLE_KUAICHUANHAO: {
+    type: "ARTICLE",
+    name: "ARTICLE_KUAICHUANHAO",
+    homeUrl: "https://kuaichuan.360kuai.com/",
+    faviconUrl: "https://p0.ssl.qhimg.com/t0144491522ec4696d3.png",
+    platformName: chrome.i18n.getMessage("platformKuaichuanhao"),
+    injectUrl: "https://kuaichuan.360kuai.com/#/console/publish/article",
+    injectFunction: ArticleKuaichuanhao,
+    tags: ["CN"],
+    accountKey: "kuaichuanhao",
+  },
+  // experimental(待线上验证):基于 aibeike 1.6.5 的 Yidianzixun ARTICLE DOM 路径
+  ARTICLE_YIDIANZIXUN: {
+    type: "ARTICLE",
+    name: "ARTICLE_YIDIANZIXUN",
+    homeUrl: "https://mp.yidianzixun.com/",
+    faviconUrl: "https://www.yidianzixun.com/favicon.ico",
+    platformName: chrome.i18n.getMessage("platformYidian"),
+    injectUrl: "https://mp.yidianzixun.com/#/Writing/articleEditor",
+    injectFunction: ArticleYidianzixun,
+    tags: ["CN"],
+    accountKey: "yidian",
+  },
+  // experimental(待线上验证):基于 aibeike 1.6.5 的 X Article DOM 路径
+  ARTICLE_XARTICLE: {
+    type: "ARTICLE",
+    name: "ARTICLE_XARTICLE",
+    homeUrl: "https://x.com/compose/articles",
+    faviconUrl: "https://picx.zhimg.com/80/v2-fe30eaa8ebd8c0e49febff8c9bd0d5e4_1440w.png",
+    platformName: chrome.i18n.getMessage("platformX"),
+    injectUrl: "https://x.com/compose/articles",
+    injectFunction: ArticleXArticle,
+    tags: ["International"],
+    accountKey: "x",
   },
 };
