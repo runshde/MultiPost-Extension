@@ -26,10 +26,41 @@ const funcPublish = (data: SyncData) => {
   chrome.runtime.sendMessage({ action: "MULTIPOST_EXTENSION_PUBLISH", data });
 };
 
-const funcScraper = async (url: string) => {
-  const response = await fetch(url);
-  const html = await response.text();
-  return { html, url };
+const funcScraper = async (url: string): Promise<unknown> => {
+  return new Promise((resolve, reject) => {
+    chrome.tabs.create({ url, active: false }, (tab) => {
+      const tabId = tab.id;
+      if (!tabId) {
+        reject(new Error("Failed to create tab"));
+        return;
+      }
+
+      const timeoutId = setTimeout(() => {
+        chrome.tabs.onUpdated.removeListener(onUpdated);
+        chrome.tabs.remove(tabId);
+        reject(new Error("Scraper timeout"));
+      }, 30000);
+
+      const onUpdated = (updatedTabId: number, changeInfo: chrome.tabs.TabChangeInfo) => {
+        if (updatedTabId === tabId && changeInfo.status === "complete") {
+          chrome.tabs.onUpdated.removeListener(onUpdated);
+          setTimeout(() => {
+            chrome.tabs.sendMessage(tabId, { type: "MULTIPOST_EXTENSION_REQUEST_SCRAPER_START" }, (response) => {
+              clearTimeout(timeoutId);
+              chrome.tabs.remove(tabId);
+              if (chrome.runtime.lastError) {
+                reject(chrome.runtime.lastError);
+              } else {
+                resolve(response);
+              }
+            });
+          }, 500);
+        }
+      };
+
+      chrome.tabs.onUpdated.addListener(onUpdated);
+    });
+  });
 };
 
 const Options = () => {
