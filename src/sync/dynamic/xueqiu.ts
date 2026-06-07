@@ -32,8 +32,38 @@ export async function DynamicXueqiu(data: SyncData) {
     });
   }
 
-  async function uploadFiles(files: File[]) {
-    const fileInput = (await waitForElement('input[type="file"]')) as HTMLInputElement;
+  async function waitForElementOptional(selector: string, timeout = 10000): Promise<Element | null> {
+    return waitForElement(selector, timeout).catch(() => null);
+  }
+
+  async function getUploadFileInput(): Promise<HTMLInputElement | null> {
+    const formSelector = 'form[target="uploadFrame"]';
+    const inputSelector = 'input[type="file"]';
+    const scopedSelector = `${formSelector} ${inputSelector}`;
+    const existingForm = document.querySelector(formSelector) as HTMLFormElement | null;
+    if (existingForm) {
+      return (
+        (existingForm.querySelector(inputSelector) as HTMLInputElement | null) ||
+        ((await waitForElementOptional(scopedSelector, 3000)) as HTMLInputElement | null)
+      );
+    }
+
+    const scopedInput = (await waitForElementOptional(scopedSelector, 3000)) as HTMLInputElement | null;
+    const form = document.querySelector(formSelector) as HTMLFormElement | null;
+    if (form) {
+      return scopedInput || (form.querySelector(inputSelector) as HTMLInputElement | null);
+    }
+
+    return (
+      (document.querySelector(inputSelector) as HTMLInputElement | null) ||
+      ((await waitForElementOptional(inputSelector, 3000)) as HTMLInputElement | null)
+    );
+  }
+
+  async function uploadFiles(files: File[]): Promise<boolean> {
+    if (files.length === 0) return false;
+
+    const fileInput = await getUploadFileInput();
     if (!fileInput) {
       console.error("未找到文件输入元素");
       return;
@@ -99,11 +129,23 @@ export async function DynamicXueqiu(data: SyncData) {
 
     console.debug("成功填入雪球内容");
 
-    // 处理图片上传
+    const requestedMediaCount = (images?.length ?? 0) + (videos?.length ?? 0);
+    let attachedMediaCount = 0;
+
+    // Upload images.
     if (images && images.length > 0) {
-      const imageFiles = await Promise.all(
-        images.map(async (file) => {
+      const imageFiles: File[] = [];
+      for (const file of images) {
+        if (!isImageFileData(file)) {
+          console.debug("跳过非图片文件:", file);
+          continue;
+        }
+
+        try {
           const response = await fetch(file.url);
+          if (!response.ok) {
+            throw new Error(`Failed to fetch image "${file.name}": ${response.status} ${response.statusText}`);
+          }
           const blob = await response.blob();
           return new File([blob], file.name, { type: file.type });
         }),
@@ -115,7 +157,7 @@ export async function DynamicXueqiu(data: SyncData) {
 
     console.debug("成功填入雪球内容和图片");
 
-    // 等待一段时间后尝试发布
+    // Wait briefly before trying to publish.
     await new Promise((resolve) => setTimeout(resolve, 5000));
 
     if (data.isAutoPublish) {

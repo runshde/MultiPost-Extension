@@ -56,6 +56,7 @@ export const tabsManagerMessageHandler = (request, _sender, sendResponse) => {
   }
   if (request.type === "MULTIPOST_EXTENSION_TABS_MANAGER_REQUEST_TABS") {
     sendResponse(getTabsManagerMessages());
+    return true;
   }
   if (request.type === "MULTIPOST_EXTENSION_TABS_MANAGER_REQUEST_ADD_TABS") {
     const { data, tabs } = request;
@@ -68,6 +69,7 @@ export const tabsManagerMessageHandler = (request, _sender, sendResponse) => {
     });
     sendResponse("success");
   }
+  return false;
 };
 
 // Tab Manager || 标签页管理 || END
