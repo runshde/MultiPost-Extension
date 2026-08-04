@@ -697,6 +697,10 @@
     "message": "Tencent Cloud",
     "description": "Platform name for Tencent Cloud"
   },
+  "platformVolcengine": {
+    "message": "Volcengine",
+    "description": "Platform name for Volcengine"
+  },
   "platformNetease": {
     "message": "NetEase",
     "description": "Platform name for NetEase"

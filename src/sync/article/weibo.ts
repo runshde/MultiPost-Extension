@@ -227,7 +227,7 @@ export async function ArticleWeibo(data: SyncData) {
     formData.append("isreward_tips", "");
     formData.append(
       "isreward_tips_url",
-      `https://card.weibo.com/article/v3/aj/editor/draft/applyisrewardtips?uid${accountId}`,
+      `https://card.weibo.com/article/${endpoint.version}/aj/editor/draft/applyisrewardtips?uid=${accountId || ""}`,
     );
     formData.append("pay_setting", JSON.stringify([]));
     formData.append("source", "0");
@@ -337,11 +337,9 @@ export async function ArticleWeibo(data: SyncData) {
         if (draftId) {
           updateTip("草稿发布成功，请预览...");
 
-          if (!data.isAutoPublish) {
-            const draftUrl = "https://card.weibo.com/article/v3/editor";
-            console.debug("draftUrl", draftUrl);
-            window.location.href = draftUrl;
-          }
+          const draftUrl = draftEndpoints[0].editorUrl;
+          console.debug("draftUrl", draftUrl);
+          window.location.href = draftUrl;
           return true;
         }
 

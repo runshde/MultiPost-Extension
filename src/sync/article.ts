@@ -25,6 +25,7 @@ import { ArticleSubstack } from "./article/substack";
 import { ArticleTencentyun } from "./article/tencentyun";
 import { ArticleTonghuashun } from "./article/tonghuashun";
 import { ArticleToutiao } from "./article/toutiao";
+import { ArticleVolcengine } from "./article/volcengine";
 import { ArticleWeibo } from "./article/weibo";
 import { ArticleWeixin } from "./article/weixin";
 import { ArticleWordpress } from "./article/wordpress";
@@ -115,6 +116,18 @@ export const ArticleInfoMap: Record<string, PlatformInfo> = {
     injectFunction: ArticleTencentyun,
     tags: ["CN"],
     accountKey: "tencentyun",
+  },
+  // experimental:当前仅填入标题和正文，不自动提交
+  ARTICLE_VOLCENGINE: {
+    type: "ARTICLE",
+    name: "ARTICLE_VOLCENGINE",
+    homeUrl: "https://developer.volcengine.com/",
+    faviconUrl: "https://lf1-cdn-tos.bytegoofy.com/goofy/tech-fe/fav.png",
+    platformName: chrome.i18n.getMessage("platformVolcengine"),
+    injectUrl: "https://developer.volcengine.com/articles/draft",
+    injectFunction: ArticleVolcengine,
+    tags: ["CN"],
+    accountKey: "volcengine",
   },
   ARTICLE_BAIJIAHAO: {
     type: "ARTICLE",
@@ -233,7 +246,7 @@ export const ArticleInfoMap: Record<string, PlatformInfo> = {
     homeUrl: "https://weibo.com/",
     faviconUrl: "https://weibo.com/favicon.ico",
     platformName: chrome.i18n.getMessage("platformWeibo"),
-    injectUrl: "https://card.weibo.com/article/v3/editor",
+    injectUrl: "https://card.weibo.com/article/v5/editor",
     injectFunction: ArticleWeibo,
     tags: ["CN"],
     accountKey: "weibo",

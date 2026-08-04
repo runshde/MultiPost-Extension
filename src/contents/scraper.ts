@@ -3,37 +3,70 @@ import scrapeContent from "./scraper/default";
 
 export const config: PlasmoCSConfig = {
   matches: ["<all_urls>"],
+  exclude_matches: ["https://*.xiaohongshu.com/*"],
   run_at: "document_start",
 };
 
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   if (message.type === "MULTIPOST_EXTENSION_REQUEST_SCRAPER_START") {
-    const scrapeFunc = async () => {
-      const articleData = await scrapeContent();
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      sendResponse(articleData);
-    };
-    // 平滑滚动到页面底部
-    window.scrollTo({
-      top: document.body.scrollHeight,
-      behavior: "smooth",
-    });
+    let hasStarted = false;
+    let timeoutId: ReturnType<typeof setTimeout> | undefined;
 
-    // 监听滚动完成事件
-    const checkScrollEnd = () => {
-      if (window.innerHeight + window.pageYOffset >= document.body.offsetHeight - 2) {
-        // 滚动完成，发送响应
-        scrapeFunc();
+    const scrapeOnce = async () => {
+      if (hasStarted) return;
+      hasStarted = true;
+      let response: Awaited<ReturnType<typeof scrapeContent>> | { error: string };
+
+      try {
+        const requestedWait = Number(new URLSearchParams(window.location.search).get("wait") || 0);
+        if (Number.isFinite(requestedWait) && requestedWait > 0) {
+          await new Promise((resolve) => setTimeout(resolve, Math.min(requestedWait, 30) * 1000));
+        }
+
+        response = await scrapeContent();
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+      } catch (error) {
+        response = { error: String(error instanceof Error ? error.message : error) };
+      } finally {
+        window.removeEventListener("scroll", checkScrollEnd);
+        if (timeoutId) clearTimeout(timeoutId);
+        sendResponse(response);
       }
     };
 
-    window.addEventListener("scroll", checkScrollEnd);
+    const checkScrollEnd = () => {
+      const body = document.body;
+      if (body && window.innerHeight + window.pageYOffset >= body.offsetHeight - 2) {
+        scrapeOnce();
+      }
+    };
 
-    // 设置超时，以防滚动没有触发完成事件
-    setTimeout(() => {
-      window.removeEventListener("scroll", checkScrollEnd);
-      scrapeFunc();
-    }, 5000); // 5秒后超时
+    const startScraping = async () => {
+      for (let attempt = 0; attempt < 50 && !document.body; attempt++) {
+        await new Promise((resolve) => setTimeout(resolve, 100));
+      }
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      if (window.location.hostname === "x.com") {
+        timeoutId = setTimeout(scrapeOnce, 3000);
+        return;
+      }
+
+      window.addEventListener("scroll", checkScrollEnd);
+      const body = document.body;
+      if (body) {
+        window.scrollTo({
+          top: body.scrollHeight,
+          behavior: "smooth",
+        });
+      }
+      timeoutId = setTimeout(scrapeOnce, 5000);
+      checkScrollEnd();
+    };
+
+    startScraping().catch(scrapeOnce);
+
+    return true;
   }
-  return true; // 保持消息通道开放
+  return false;
 });

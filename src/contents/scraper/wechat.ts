@@ -31,6 +31,18 @@ export default async function scrapeWeixinContent(): Promise<ArticleData | undef
     const codeLineNumbers = doc.querySelectorAll("ul.code-snippet__line-index");
     codeLineNumbers.forEach((element) => element.remove());
 
+    const videoPlaceholders = doc.querySelectorAll<HTMLElement>("span[data-cover][vid]");
+    videoPlaceholders.forEach((element) => {
+      const encodedCover = element.getAttribute("data-cover");
+      const videoId = element.getAttribute("vid");
+      if (!encodedCover || !videoId) return;
+
+      const image = doc.createElement("img");
+      image.src = decodeURIComponent(encodedCover);
+      image.alt = `视频封面 ${videoId}`;
+      element.replaceWith(image);
+    });
+
     const processedContent = doc.body.innerHTML;
     return preprocessor(processedContent);
   };

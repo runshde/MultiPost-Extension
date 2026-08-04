@@ -70,7 +70,7 @@
   },
   "manifest": {
     "default_locale": "zh_CN",
-    "host_permissions": ["https://*/*", "http://127.0.0.1/*", "http://localhost/*"],
+    "host_permissions": ["https://*/*", "http://mp.163.com/*", "http://127.0.0.1/*", "http://localhost/*"],
     "permissions": ["activeTab", "tabs", "background", "scripting", "tabGroups", "sidePanel"],
     "web_accessible_resources": [
       {

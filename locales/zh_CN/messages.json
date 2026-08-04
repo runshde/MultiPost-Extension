@@ -675,6 +675,10 @@
     "message": "腾讯云",
     "description": "腾讯云平台名称"
   },
+  "platformVolcengine": {
+    "message": "火山引擎",
+    "description": "火山引擎平台名称"
+  },
   "platformNetease": {
     "message": "网易号",
     "description": "网易号平台名称"

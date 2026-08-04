@@ -25,14 +25,21 @@ async function isOriginTrusted(origin: string, action: string): Promise<boolean>
     return true;
   }
 
+  let hostname: string;
+  try {
+    hostname = new URL(origin).hostname;
+  } catch {
+    return false;
+  }
+
   const trustedDomains = (await storage.get<Array<{ domain: string }>>("trustedDomains")) || [];
 
   return trustedDomains.some(({ domain }) => {
     if (domain.startsWith("*.")) {
       const wildCardDomain = domain.slice(2);
-      return origin.endsWith(wildCardDomain);
+      return hostname === wildCardDomain || hostname.endsWith(`.${wildCardDomain}`);
     }
-    return origin === domain;
+    return hostname === domain;
   });
 }
 
@@ -44,7 +51,7 @@ window.addEventListener("message", async (event) => {
   }
 
   // 验证来源是否可信
-  const isTrusted = await isOriginTrusted(new URL(event.origin).hostname, getRightAction(request.action));
+  const isTrusted = await isOriginTrusted(event.origin, getRightAction(request.action));
   if (!isTrusted) {
     event.source.postMessage({
       type: "response",

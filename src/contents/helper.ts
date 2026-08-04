@@ -1,6 +1,7 @@
 import type { PlasmoCSConfig } from "plasmo";
 import { handleBilibiliImageUpload } from "./helper/bilibili";
 import { handleBlueskyImageUpload, handleBlueskyVideoUpload } from "./helper/bluesky";
+import { handleWeiboVideoUpload, prepareWeiboVideoInput } from "./helper/weibo";
 import { handleXiaoheiheImageUpload, handleXiaoheiheVideoUpload } from "./helper/xiaoheihe";
 
 export const config: PlasmoCSConfig = {
@@ -9,7 +10,8 @@ export const config: PlasmoCSConfig = {
     "https://bsky.app/*",
     "https://www.v2ex.com/write*",
     "https://v2ex.com/write*",
-    "https://www.xiaoheihe.cn/*",
+    "https://www.xiaoheihe.cn/creator/editor/*",
+    "https://weibo.com/upload/channel*",
   ],
   world: "MAIN",
   run_at: "document_start",
@@ -29,12 +31,17 @@ document.createElement = (tagName, options) => {
 
   if (tagName.toLowerCase() === "input") {
     createdInputs.push(element);
+    prepareWeiboVideoInput(element);
     console.log("element", element);
   }
   return element;
 };
 
 function handleMessage(event: MessageEvent) {
+  if (event.source !== window || !event.data || typeof event.data !== "object") {
+    return;
+  }
+
   const data = event.data;
 
   if (data.type === "BILIBILI_DYNAMIC_UPLOAD_IMAGES") {
@@ -52,6 +59,8 @@ function handleMessage(event: MessageEvent) {
     handleXiaoheiheImageUpload(event);
   } else if (data.type === "XIAOHEIHE_VIDEO_UPLOAD") {
     handleXiaoheiheVideoUpload(event);
+  } else if (data.type === "WEIBO_UPLOAD_VIDEO") {
+    handleWeiboVideoUpload(event);
   }
 }
 
